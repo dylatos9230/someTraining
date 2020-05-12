@@ -1,4 +1,6 @@
-#include <listNode.h>
+#include "listNode.h"
+#include <stdlib.h>
+using namespace std;
 
 template <typename T>
 class List
@@ -14,7 +16,8 @@ protected:
   int clear();
   void copyNodes(ListNodePosi(T), int);
   // merge an ordered list in the section;
-  void merge(ListNodePosi(T) &, int, List<T> &, ListNodePosi(T), int) void mergeSort(ListNodePosi(T), int);
+  void merge(ListNodePosi(T) &, int, List<T> &, ListNodePosi(T), int);
+  void mergeSort(ListNodePosi(T), int);
   void selectionSort(ListNodePosi(T), int);
   void insertionSort(ListNodePosi(T), int);
 
@@ -26,11 +29,11 @@ public:
   List(ListNodePosi(T) p, int n);        // Copy n items from the position p in the list.
   ~List();
   // Read-only API
-  Rank size() const {return _size};
-  bool empty() const {return _size <= 0}; // Judge if empty or not.
+  Rank size() const { return _size; };
+  bool empty() const { return _size <= 0; }; // Judge if empty or not.
   T &operator[](Rank r) const;
-  ListNodePosi(T) first() const {return header->succ};
-  ListNodePosi(T) last() const {return trailer->pred};
+  ListNodePosi(T) first() const { return header->succ; };
+  ListNodePosi(T) last() const { return trailer->pred; };
   ListNodePosi(T) find(T const &e, int n, ListNodePosi(T) p) const;
   ListNodePosi(T) search(T const &e, int n, ListNodePosi(T) p) const;
 
@@ -42,7 +45,7 @@ public:
   T remove(ListNodePosi(T) p);
   int deduplicate();
   int uniquify();
-  void sort(ListNodePosi(T) p,int n);
+  void sort(ListNodePosi(T) p, int n);
   // Traverse
   void traverse(void (*visit)(T &));
   template <typename VST>
@@ -169,10 +172,8 @@ int List<T>::deduplicate()
   if (_size < 2)
     return 0; // It is must be an unique list;
   int oldSize = _size;
-  ListNodePosi(T) p = header;
-  Rank r = 0;
-  while (trailer != (p = p->succ)) // loop util traverse the last node before the sentinel
-  {
+  ListNodePosi(T) p = h0= p->succ)) // loop util traverse the last node before the sentinel
+  {List<T>::merge(ListNodePosi(T)&
     ListNodePosi(T) q = find(p->data, r, p);
     q ? remove(q) : r++;
   }
@@ -219,32 +220,106 @@ int List<T>::uniquify()
 template <typename T>
 ListNodePosi(T) List<T>::search(T const &e, int n, ListNodePosi(T) p) const
 {
-  while (0<=n--)
+  while (0 <= n--)
   {
-    if (e>=((p=p->pred)->data))
+    if (e >= ((p = p->pred)->data))
       break;
   }
   return p;
 }
 
 template <typename T>
-void List<T>::sort(ListNodePosi(T) p, int n){
+void List<T>::sort(ListNodePosi(T) p, int n)
+{
   switch (rand() % 3)
   {
-  case 1: insertionSort(p,n);
+  case 1:
+    insertionSort(p, n);
     break;
-  case 2: selectionSort(p,n);
+  case 2:
+    selectionSort(p, n);
     break;
-  default: mergeSort(p,n);
+  default:
+    mergeSort(p, n);
     break;
   }
 }
 
 template <typename T>
-void List<T>::insertionSort(ListNodePosi(T) p, int n){
+void List<T>::insertionSort(ListNodePosi(T) p, int n)
+{
   for (int r = 0; r < n; r++)
   {
-    insertAfter(search(p->data,r,))
+    insertAfter(search(p->data, r, p), p->data);
+    p = p->succ;
+    remove(p->pred);
   }
-  
+}
+
+template <typename T>
+ListNodePosi(T) selectMax(ListNodePosi(T) p, int n)
+{
+  ListNodePosi(T) max = p; // Consider the first p as the maxium value for the time being.
+  for (ListNodePosi(T) cur = p; 1 < n; n--)
+  {
+    if ((cur = cur->succ)->data > (max->data))
+    {
+      max = cur;
+    }
+  }
+  return max;
+}
+
+template <typename T>
+void List<T>::selectionSort(ListNodePosi(T) p, int n)
+{
+  ListNodePosi(T) head = p;
+  ListNodePosi(T) tail = p->succ;
+  for (int r = 0; r < n; r++)
+    tail = tail->succ;
+  while (1 < n)
+  {
+    ListNodePosi(T) max = selectMax(head->succ, n); // Find out the maxium within the section [0,n)
+    insertBefore(tail, remove(max));
+    n--;
+  }
+}
+
+template <typename T>
+void List<T>::merge(ListNodePosi(T) & p, int n, List<T> &L, ListNodePosi(T) q, int m)
+{
+  ListNodePosi(T) pp = p->pred;
+  while (0 < m)
+  {
+    if ((0 < n) && (p->data <= q->data))
+    {
+      if (q == (p = p->succ))
+        break;
+      n--;
+    }
+    else
+    {
+      insertBefore(p, L.remove((q = q->succ)->pred));
+      m--;
+    }
+  }
+  p = pp->succ;
+}
+
+template <typename T>
+void List<T>::mergeSort(ListNodePosi(T) p, int n)
+{
+  if (n < 2)
+    return;
+  int m = n >> 1; // Find out the position at the middle;
+  // Splite the sublist evenly in two;
+  ListNodePosi(T) q = p;
+  for (int i = 0; i < m; i++)
+  {
+    /* code */
+    q = q->succ;
+  }
+  mergeSort(p, m);
+  mergeSort(q, n - m);
+  merge(p, m * this, q, n - m) //  Merging;
 }

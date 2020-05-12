@@ -4,7 +4,7 @@
  * @LastEditors: dylatos
  * @LastEditTime: 2020-05-11 07:01:56
  */
-
+#define NULL 0
 typedef int Rank;
 #define ListNodePosi(T) ListNode<T> * // The current position.
 
@@ -17,13 +17,13 @@ struct ListNode
   ListNodePosi(T) succ; //Data,predecessor,successor
   // Contructor
   ListNode(){};
-  ListNode(T e, ListNodePosi(T) p = Null, ListNodePosi(T) s = Null)
+  ListNode(T e, ListNodePosi(T) p = NULL, ListNodePosi(T) s = NULL)
       : data(e), pred(p), succ(s) {} // Default constructor.
 
   // Operation API
 
-  ListNodePosi(T) insertAsPred(T const &e); //Insert a new node into list before the current one.
-  ListNodePosi(T) insertAsSucc(T const &e); // Insert a new node into list after the current one.
+  ListNodePosi(T) insertAsPred(T const& e); //Insert a new node into list before the current one.
+  ListNodePosi(T) insertAsSucc(T const& e); // Insert a new node into list after the current one.
 };
 
 template <typename T>

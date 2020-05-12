@@ -26,7 +26,8 @@ protected:
   T remove(Rank r);
   int deduplicate();
   void traverse(void (*visit)(T&));
-  // void traverse(void (VST& visit);
+  template <typename VST>
+  void traverse(VST& visit);
   void increase(Vector<T> & V);
   int uniquify();
 
@@ -170,10 +171,10 @@ void Vector<T>::traverse(void (*visit)(T&)){
   for (int i = 0; i < _size; i++) visit(_elem[i]);
 }
 
-// template <typename T, typename VST>
-// void Vector<T>::traverse(VST& visit){
-//   for (int i = 0; i < _size; i++) visit(_elem[i]);
-// }
+template <typename T> template <typename VST>
+void Vector<T>::traverse(VST& visit){
+  for (int i = 0; i < _size; i++) visit(_elem[i]);
+}
 
 template <typename T>
 struct Increase
